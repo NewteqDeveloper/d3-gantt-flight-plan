@@ -421,7 +421,10 @@ var ganttChart = function (conf) {
 
         var text = textGroup.selectAll("text")
             .data(self.items)
-            .html(function (d) {
+            // .html(function (d) {
+            //     return d.title
+            // })
+            .text(function (d) {
                 return d.title
             })
             .attr("class", "custom-text");
@@ -434,7 +437,6 @@ var ganttChart = function (conf) {
                     var currentText = d3.select(this);
                     var nodeBb = currentText.node().getBBox();
                     currentText.attr("x", function (d) {
-                        debugger;
                         var rectStart = xScale(d.start);
                         var rectEnd = xScale(d.end);
                         currentText.html("New Text");
@@ -445,7 +447,8 @@ var ganttChart = function (conf) {
                         var rectY = (self.sublanes < 2) ? yScale(d.lane) : yScale(d.lane) + d.sublane * itemHeight;
                         var centerText = itemHeight / 2;
                         return rectY + centerText;
-                    });
+                    })
+                    .call(dotme);
                 })
         }, 100);
 
@@ -457,11 +460,12 @@ var ganttChart = function (conf) {
 
     function dotme(text) {
         text.each(function () {
+            debugger;
             var text = d3.select(this);
             var words = text.text().split(/\s+/);
 
             var ellipsis = text.text('').append('tspan').attr('class', 'elip').text('...');
-            var width = parseFloat(text.attr('width')) - ellipsis.node().getComputedTextLength();
+            var width = parseFloat(+text.node().getBBox().width - +ellipsis.node().getComputedTextLength());
             var numWords = words.length;
 
             var tspan = text.insert('tspan', ':first-child').text(words.join(' '));
