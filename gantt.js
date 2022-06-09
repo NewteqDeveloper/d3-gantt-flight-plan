@@ -390,8 +390,8 @@ var ganttChart = function(conf) {
     rects.exit().remove();
 
     var text = textThings.selectAll("text")
-        .data([{title: 'words'}])
-        .html("Yes")
+        .data(self.items)
+        .html(function(d) { return d.title})
         .attr("x", 500)
         .attr("y", 350);
     text.enter().append("text");
