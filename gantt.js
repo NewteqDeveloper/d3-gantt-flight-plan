@@ -392,11 +392,37 @@ var ganttChart = function(conf) {
 
     var text = textThings.selectAll("text")
         .data(self.items)
-        .html(function(d) { return d.title})
-        .attr("x", 500)
-        .attr("y", 350);
+        .html(function(d) { return d.title })
+        // .attr("x", function (d) {
+        //   return xScale(d.start);
+        // })
+        // .attr("y", function (d) {
+        //   return (self.sublanes < 2) ? yScale(d.lane) : yScale(d.lane) + d.sublane*itemHeight;
+        // });
     text.enter().append("text");
     text.exit().remove();
+
+    setTimeout(() => {
+      d3.selectAll("text")
+          .each(function() {
+            var currentText = d3.select(this);
+            var currentNode = currentText.node();
+            var nodeBb = currentText.node().getBBox();
+            currentText.attr("x", function (d) {
+              debugger;
+              var rectStart = xScale(d.start);
+              var rectEnd = xScale(d.end);
+              currentText.html("New Text");
+              var centerStart = rectStart + ((rectEnd - rectStart) / 2) - (nodeBb.width / 2)
+              return centerStart;
+            })
+                .attr("y", function (d) {
+                  var rectY = (self.sublanes < 2) ? yScale(d.lane) : yScale(d.lane) + d.sublane*itemHeight;
+                  var centerText = itemHeight / 2;
+                  return rectY + centerText;
+                });
+          })
+    }, 100);
 
     main.select('g.main.axis.date').call(xAxis);
     main.select('g.main.axis.lane').call(yAxis);
