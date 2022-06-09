@@ -365,6 +365,7 @@ var ganttChart = function(conf) {
     yScale.domain([0, laneLength]);
     zoom.x(xScale);
     redraw();
+    redraw();
   }
 
   function redraw() {
