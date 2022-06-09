@@ -6,7 +6,7 @@ var ganttChart = function(conf) {
     toStr = Object.prototype.toString,
     astr = "[object Array]",
     ostr = "[object Object]",
-    chart, drag, main, itemRects, tooltipDiv, xAxis, xScale, yAxis, yScale, zoom, textThings,
+    chart, drag, main, itemRects, tooltipDiv, xAxis, xScale, yAxis, yScale, zoom, textGroup,
     resizeRectMargin = 50;
 
   api = {
@@ -127,7 +127,8 @@ var ganttChart = function(conf) {
     itemRects = main.append("g")
       .attr("clip-path", "url(#clip)");
 
-    textThings = main.append("g");
+    textGroup = main.append("g")
+        .attr("class", "title-text");
 
     tooltipDiv = d3.select("body").append("div")
       .attr("class", "gantt-tooltip")
@@ -390,9 +391,10 @@ var ganttChart = function(conf) {
     rects.enter().append("rect");
     rects.exit().remove();
 
-    var text = textThings.selectAll("text")
+    var text = textGroup.selectAll("text")
         .data(self.items)
         .html(function(d) { return d.title })
+        .attr("class", "custom-text");
         // .attr("x", function (d) {
         //   return xScale(d.start);
         // })
@@ -403,10 +405,9 @@ var ganttChart = function(conf) {
     text.exit().remove();
 
     setTimeout(() => {
-      d3.selectAll("text")
+      d3.selectAll(".custom-text")
           .each(function() {
             var currentText = d3.select(this);
-            var currentNode = currentText.node();
             var nodeBb = currentText.node().getBBox();
             currentText.attr("x", function (d) {
               debugger;
