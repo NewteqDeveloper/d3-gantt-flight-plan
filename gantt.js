@@ -146,6 +146,7 @@ var ganttChart = function (conf) {
             .attr("clip-path", "url(#clip)");
 
         textGroup = main.append("g")
+            .attr("clip-path", "url(#clip)")
             .attr("class", "title-text");
 
         tooltipDiv = d3.select("body").append("div")
@@ -392,8 +393,8 @@ var ganttChart = function (conf) {
     }
 
     function redraw() {
-        var itemHeight = getMarginHeight() / (self.lanes.length || 1) / (self.sublanes || 1),
-            rects;
+        var itemHeight = getMarginHeight() / (self.lanes.length || 1) / (self.sublanes || 1);
+        var rects;
 
         rects = itemRects.selectAll("rect")
             .data(self.items)
@@ -421,9 +422,6 @@ var ganttChart = function (conf) {
 
         var text = textGroup.selectAll("text")
             .data(self.items)
-            // .html(function (d) {
-            //     return d.title
-            // })
             .text(function (d) {
                 return d.title
             })
@@ -431,26 +429,46 @@ var ganttChart = function (conf) {
         text.enter().append("text");
         text.exit().remove();
 
-        setTimeout(() => {
-            d3.selectAll(".custom-text")
-                .each(function () {
-                    var currentText = d3.select(this);
-                    var nodeBb = currentText.node().getBBox();
-                    currentText.attr("x", function (d) {
-                        var rectStart = xScale(d.start);
-                        var rectEnd = xScale(d.end);
-                        currentText.html("New Text");
-                        var centerStart = rectStart + ((rectEnd - rectStart) / 2) - (nodeBb.width / 2)
-                        return centerStart;
-                    })
+        d3.selectAll(".custom-text")
+            .each(function () {
+                var currentText = d3.select(this);
+                var nodeBb = this.getBBox();//currentText.node().getBBox();
+                currentText.attr("x", function (d) {
+                    var rectStart = xScale(d.start);
+                    var rectEnd = xScale(d.end);
+                    //currentText.html("New Text");
+                    var centerStart = rectStart + ((rectEnd - rectStart) / 2) - (nodeBb.width / 2)
+                    return centerStart;
+                })
                     .attr("y", function (d) {
                         var rectY = (self.sublanes < 2) ? yScale(d.lane) : yScale(d.lane) + d.sublane * itemHeight;
                         var centerText = itemHeight / 2;
                         return rectY + centerText;
                     })
-                    .call(dotme);
-                })
-        }, 100);
+                    //.call(dotme);
+                //dotme(currentText, start);
+            })
+
+        // setTimeout(() => {
+        //     d3.selectAll(".custom-text")
+        //         .each(function () {
+        //             var currentText = d3.select(this);
+        //             var nodeBb = currentText.node().getBBox();
+        //             currentText.attr("x", function (d) {
+        //                 var rectStart = xScale(d.start);
+        //                 var rectEnd = xScale(d.end);
+        //                 currentText.html("New Text");
+        //                 var centerStart = rectStart + ((rectEnd - rectStart) / 2) - (nodeBb.width / 2)
+        //                 return centerStart;
+        //             })
+        //             .attr("y", function (d) {
+        //                 var rectY = (self.sublanes < 2) ? yScale(d.lane) : yScale(d.lane) + d.sublane * itemHeight;
+        //                 var centerText = itemHeight / 2;
+        //                 return rectY + centerText;
+        //             })
+        //             //.call(dotme);
+        //         })
+        // }, 100);
 
         main.select('g.main.axis.date').call(xAxis);
         main.select('g.main.axis.lane').call(yAxis);
@@ -459,29 +477,27 @@ var ganttChart = function (conf) {
     }
 
     function dotme(text) {
-        text.each(function () {
-            debugger;
-            var text = d3.select(this);
-            var words = text.text().split(/\s+/);
+        debugger;
+        var textData = text.data()[0];
+        var words = text.text().split(/\s+/);
 
-            var ellipsis = text.text('').append('tspan').attr('class', 'elip').text('...');
-            var width = parseFloat(+text.node().getBBox().width - +ellipsis.node().getComputedTextLength());
-            var numWords = words.length;
+        var ellipsis = text.text('').append('tspan').attr('class', 'elip').text('...');
+        var width = xScale(textData.start) + xScale(textData.end);
+        var numWords = words.length;
 
-            var tspan = text.insert('tspan', ':first-child').text(words.join(' '));
+        var tspan = text.insert('tspan', ':first-child').text(words.join(' '));
 
-            // Try the whole line
-            // While it's too long, and we have words left, keep removing words
+        // Try the whole line
+        // While it's too long, and we have words left, keep removing words
 
-            while (tspan.node().getComputedTextLength() > width && words.length) {
-                words.pop();
-                tspan.text(words.join(' '));
-            }
+        while (tspan.node().getComputedTextLength() > width && words.length) {
+            words.pop();
+            tspan.text(words.join(' '));
+        }
 
-            if (words.length === numWords) {
-                ellipsis.remove();
-            }
-        });
+        if (words.length === numWords) {
+            ellipsis.remove();
+        }
     }
 
     function resize() {

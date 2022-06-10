@@ -83,7 +83,7 @@ setTimeout(() => {
                 tooltip: getTooltip,
                 class: classes[getRandomInt(0, classes.length)],
                 sublane: getRandomInt(0, 4),
-                title: 'Test Text ' + i
+                title: 'Long text to test things - Test Text ' + i
             });
             startDate += 1800000 + rnd;
         }
