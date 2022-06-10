@@ -431,11 +431,46 @@ var ganttChart = function (conf) {
 
         d3.selectAll(".custom-text")
             .each(function () {
-                var currentText = d3.select(this);
-                var nodeBb = this.getBBox();//currentText.node().getBBox();
+                var currentNode = this;
+                var currentText = d3.select(currentNode);
+                var nodeBb = currentNode.getBBox();//currentText.node().getBBox();
                 currentText.attr("x", function (d) {
                     var rectStart = xScale(d.start);
                     var rectEnd = xScale(d.end);
+                    debugger;
+                    var currentT = currentText.text();
+                    var bbox = currentNode.getComputedTextLength();
+                    debugger;
+                    var words = currentText.text().split(/\s+/);
+                    var numberWords = words.length;
+                    var count = 0;
+                    currentText.text('');
+                    while (currentNode.getBBox().width < (rectEnd - rectStart) && count < numberWords - 1) {
+                        currentText.text(currentText.text() + ' ' + words.shift());
+                        count++;
+                    }
+
+                    // var words = currentText.text().split(/\s+/);
+                    //
+                    // var ellipsis = currentText.text('').append('tspan').attr('class', 'elip').text('...');
+                    // var width = rectStart + rectEnd;
+                    // var numWords = words.length;
+                    //
+                    // var tspan = text.insert('tspan', ':first-child').text(words.join(' '));
+                    //
+                    // // Try the whole line
+                    // // While it's too long, and we have words left, keep removing words
+                    //
+                    // var count = 0;
+                    // while (tspan.node().getComputedTextLength() > width && words.length && count < 5) {
+                    //     count++;
+                    //     words.pop();
+                    //     tspan.text(words.join(' '));
+                    // }
+                    //
+                    // if (words.length === numWords) {
+                    //     ellipsis.remove();
+                    // }
                     //currentText.html("New Text");
                     var centerStart = rectStart + ((rectEnd - rectStart) / 2) - (nodeBb.width / 2)
                     return centerStart;
@@ -476,29 +511,29 @@ var ganttChart = function (conf) {
         hideTooltip();
     }
 
-    function dotme(text) {
-        debugger;
-        var textData = text.data()[0];
-        var words = text.text().split(/\s+/);
-
-        var ellipsis = text.text('').append('tspan').attr('class', 'elip').text('...');
-        var width = xScale(textData.start) + xScale(textData.end);
-        var numWords = words.length;
-
-        var tspan = text.insert('tspan', ':first-child').text(words.join(' '));
-
-        // Try the whole line
-        // While it's too long, and we have words left, keep removing words
-
-        while (tspan.node().getComputedTextLength() > width && words.length) {
-            words.pop();
-            tspan.text(words.join(' '));
-        }
-
-        if (words.length === numWords) {
-            ellipsis.remove();
-        }
-    }
+    // function dotme(text) {
+    //     debugger;
+    //     var textData = text.data()[0];
+    //     var words = text.text().split(/\s+/);
+    //
+    //     var ellipsis = text.text('').append('tspan').attr('class', 'elip').text('...');
+    //     var width = xScale(textData.start) + xScale(textData.end);
+    //     var numWords = words.length;
+    //
+    //     var tspan = text.insert('tspan', ':first-child').text(words.join(' '));
+    //
+    //     // Try the whole line
+    //     // While it's too long, and we have words left, keep removing words
+    //
+    //     while (tspan.node().getComputedTextLength() > width && words.length) {
+    //         words.pop();
+    //         tspan.text(words.join(' '));
+    //     }
+    //
+    //     if (words.length === numWords) {
+    //         ellipsis.remove();
+    //     }
+    // }
 
     function resize() {
         if (self.isAutoResize) {
