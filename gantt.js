@@ -472,7 +472,7 @@ var ganttChart = function (conf) {
                     //     ellipsis.remove();
                     // }
                     //currentText.html("New Text");
-                    var centerStart = rectStart + ((rectEnd - rectStart) / 2) - (nodeBb.width / 2)
+                    var centerStart = rectStart + ((rectEnd - rectStart) / 2) - (currentNode.getBBox().width / 2)
                     return centerStart;
                 })
                     .attr("y", function (d) {
