@@ -438,17 +438,35 @@ var ganttChart = function (conf) {
                     var rectStart = xScale(d.start);
                     var rectEnd = xScale(d.end);
                     debugger;
-                    var currentT = currentText.text();
-                    var bbox = currentNode.getComputedTextLength();
-                    debugger;
                     var words = currentText.text().split(/\s+/);
                     var numberWords = words.length;
                     var count = 0;
                     currentText.text('');
                     while (currentNode.getBBox().width < (rectEnd - rectStart) && count < numberWords - 1) {
+                        // if (count === 0) {
+                        //     currentText.text(words.shift());
+                        // } else if(count === numberWords - 1) {
+                        //     currentText.text(currentText.text() + ' ' + words.shift());
+                        // }
                         currentText.text(currentText.text() + ' ' + words.shift());
                         count++;
                     }
+                    if (currentNode.getBBox().width > (rectEnd - rectStart)){
+                        currentText.text('...');
+                    }
+                    // if (currentNode.getBBox().width > (rectEnd - rectStart)){
+                    //     currentText.text('...');
+                    // } else {
+                    //     while (currentNode.getBBox().width < (rectEnd - rectStart) && count < numberWords - 1) {
+                    //         // if (count === 0) {
+                    //         //     currentText.text(words.shift());
+                    //         // } else if(count === numberWords - 1) {
+                    //         //     currentText.text(currentText.text() + ' ' + words.shift());
+                    //         // }
+                    //         currentText.text(currentText.text() + ' ' + words.shift());
+                    //         count++;
+                    //     }
+                    // }
 
                     // var words = currentText.text().split(/\s+/);
                     //
