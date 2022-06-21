@@ -437,23 +437,23 @@ var ganttChart = function (conf) {
                 currentText.attr("x", function (d) {
                     var rectStart = xScale(d.start);
                     var rectEnd = xScale(d.end);
-                    debugger;
-                    var words = currentText.text().split(/\s+/);
-                    var numberWords = words.length;
-                    var count = 0;
-                    currentText.text('');
-                    while (currentNode.getBBox().width < (rectEnd - rectStart) && count < numberWords - 1) {
-                        // if (count === 0) {
-                        //     currentText.text(words.shift());
-                        // } else if(count === numberWords - 1) {
+                        // debugger;
+                        // var words = currentText.text().split(/\s+/);
+                        // var numberWords = words.length;
+                        // var count = 0;
+                        // currentText.text('');
+                        // while (currentNode.getBBox().width < (rectEnd - rectStart) && count < numberWords - 1) {
+                        //     // if (count === 0) {
+                        //     //     currentText.text(words.shift());
+                        //     // } else if(count === numberWords - 1) {
+                        //     //     currentText.text(currentText.text() + ' ' + words.shift());
+                        //     // }
                         //     currentText.text(currentText.text() + ' ' + words.shift());
+                        //     count++;
                         // }
-                        currentText.text(currentText.text() + ' ' + words.shift());
-                        count++;
-                    }
-                    if (currentNode.getBBox().width > (rectEnd - rectStart)){
-                        currentText.text('...');
-                    }
+                        // if (currentNode.getBBox().width > (rectEnd - rectStart)){
+                        //     currentText.text('...');
+                        // }
                     // if (currentNode.getBBox().width > (rectEnd - rectStart)){
                     //     currentText.text('...');
                     // } else {

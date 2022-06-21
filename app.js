@@ -93,5 +93,5 @@ setTimeout(() => {
 
     gantt.enableDrag(false);
     gantt.showXGrid(false);
-    gantt.addItems(getRandomItems(20));
+    gantt.addItems(sampleDataSet());
 }, 1000);
