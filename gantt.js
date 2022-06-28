@@ -173,6 +173,7 @@ var ganttChart = function (conf) {
             .tickFormat("");
 
         zoom = d3.behavior.zoom()
+            .scaleExtent([0.0188679, 1])
             .x(xScale);
 
         main.append('g')
@@ -318,10 +319,12 @@ var ganttChart = function (conf) {
     function getTimeDomain() {
         return [
             d3.min(self.items, function (d) {
-                return d.start
+                return new Date('2022-06-01');
+                // return d.start
             }),
             d3.max(self.items, function (d) {
-                return d.end
+                return new Date('2022-06-07');
+                // return d.end
             })
         ];
     }
@@ -490,7 +493,31 @@ var ganttChart = function (conf) {
                     //     ellipsis.remove();
                     // }
                     //currentText.html("New Text");
-                    var centerStart = rectStart + ((rectEnd - rectStart) / 2) - (currentNode.getBBox().width / 2)
+                    var centerStart = rectStart + ((rectEnd - rectStart) / 2) - (currentNode.getBBox().width / 2);
+                    if (currentText[0][0].innerHTML == "Deliverable 1") {
+                        console.log(currentText[0][0].innerHTML, rectStart, rectEnd, nodeBb.width, centerStart, getMarginWidth());
+                    }
+                    if ((centerStart + nodeBb.width) + 8 >= rectEnd) {
+                        currentText.html('icon');
+                        centerStart = rectStart + ((rectEnd - rectStart) / 2) - (currentNode.getBBox().width / 2);
+                    }
+                    if (rectEnd >= getMarginWidth()){
+                        centerStart = rectStart + ((getMarginWidth() - rectStart) / 2) - (currentNode.getBBox().width / 2);
+                    } else if(rectStart < 0) {
+                        centerStart = (rectEnd / 2) - (currentNode.getBBox().width / 2);
+                    }
+                    if (rectStart + nodeBb.width + 8 > getMarginWidth()){
+                        centerStart = rectStart + 8;
+                    } else if (rectEnd - nodeBb.width - 8 < 0) {
+                        centerStart = rectEnd - nodeBb.width - 8;
+                    }
+
+                    if (rectStart < 0 && rectEnd > getMarginWidth()){
+                        centerStart = (getMarginWidth() / 2) - (currentNode.getBBox().width / 2);
+                    }
+                    // if (nodeBb.width <= rectEnd - rectStart + 8) {
+                    //     centerStart = rectStart + 8;
+                    // }
                     return centerStart;
                 })
                     .attr("y", function (d) {

@@ -35,6 +35,26 @@ function sampleDataSet() {
 
     items.push({
         id: 0,
+        lane: 0,
+        start: new Date('2021-12-31'),
+        end: new Date('2022-01-02'),
+        class: 'info',
+        sublane: 0,
+        title: 'Milestone 4'
+    });
+
+    items.push({
+        id: 0,
+        lane: 0,
+        start: new Date('2022-12-31'),
+        end: new Date('2023-01-02'),
+        class: 'info',
+        sublane: 0,
+        title: 'Milestone 5'
+    });
+
+    items.push({
+        id: 0,
         lane: 1,
         start: new Date('2022-06-02'),
         end: new Date('2022-06-12'),
