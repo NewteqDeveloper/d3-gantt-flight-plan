@@ -55,13 +55,13 @@ setTimeout(() => {
     }
 
     function getTooltip() {
-        return '<h4>Item #' + this.id + '</h4>' +
+        const value = '<h4>Item #' + this.id + '</h4>' +
             '<table class="gantt-tooltip-table">' +
             '  <tr><td class="text-right">Start:</td><td>' + new Date(this.start) + '</td></tr>' +
             '  <tr><td class="text-right">End:</td><td>' + new Date(this.end) + '</td></tr>' +
             '  <tr><td class="text-right">Class:</td><td>' + this.class + '</td></tr>' +
-            '</table>'
-
+            '</table>';
+        return value
     }
 
     function getRandomItems(n) {

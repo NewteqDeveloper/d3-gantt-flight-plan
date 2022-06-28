@@ -416,8 +416,8 @@ var ganttChart = function (conf) {
             })
             .attr("opacity", .75)
             .call(drag)
-            .on("click", (self.isEnableTooltip) ? showTooltip : null)
-            //.on("mouseover", showTooltip)
+            //.on("click", (self.isEnableTooltip) ? showTooltip : null)
+            .on("mouseover", showTooltip)
             .on("mousemove", changeCursor)
 
         rects.enter().append("rect");
@@ -425,8 +425,8 @@ var ganttChart = function (conf) {
 
         var text = textGroup.selectAll("text")
             .data(self.items)
-            .text(function (d) {
-                return d.title
+            .html(function (d) {
+                return d.title;
             })
             .attr("class", "custom-text");
         text.enter().append("text");
@@ -498,7 +498,9 @@ var ganttChart = function (conf) {
                         console.log(currentText[0][0].innerHTML, rectStart, rectEnd, nodeBb.width, centerStart, getMarginWidth());
                     }
                     if ((centerStart + nodeBb.width) + 8 >= rectEnd) {
-                        currentText.html('icon');
+                        currentText.attr('style', "font-family: Material Icons;");
+                        currentText.text('flag');
+                        //currentText.html('<span class="material-icons">outlined_flag</span>');
                         centerStart = rectStart + ((rectEnd - rectStart) / 2) - (currentNode.getBBox().width / 2);
                     }
                     if (rectEnd >= getMarginWidth()){
