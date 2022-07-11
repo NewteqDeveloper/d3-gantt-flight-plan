@@ -60,9 +60,9 @@ var ganttChart = function (conf) {
     self.renderTo = '#gantt_chart';
     self.sublanes = 1;
 
-    self.isAutoResize = true;
-    self.isEnableDrag = true;
-    self.isEnableItemResize = true;
+    self.isAutoResize = false;
+    self.isEnableDrag = false;
+    self.isEnableItemResize = false;
     self.isEnableTooltip = true;
     self.isEnableZoom = true;
     self.isShowXGrid = true;
