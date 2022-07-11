@@ -3,12 +3,32 @@ function sampleDataSet() {
     var startDate = Date.parse('2022-06-01T00:30:00'),
         classes = ['success', 'danger', 'warning', 'info', 'default'];
 
+    function formatDate(date) {
+        let d = new Date(date);
+        let month = (d.getMonth() + 1).toString();
+        let day = d.getDate().toString();
+        let year = d.getFullYear().toString();
+        if (month.length < 2) {
+            month = '0' + month;
+        }
+        if (day.length < 2) {
+            day = '0' + day;
+        }
+        return [year, month, day].join('-');
+    }
+
     function getTooltip() {
-        return '<h4>' + this.title + '</h4>' +
-            '<table class="gantt-tooltip-table">' +
-            '  <tr><td class="text-right">Start:</td><td>' + new Date(this.start) + '</td></tr>' +
-            '  <tr><td class="text-right">End:</td><td>' + new Date(this.end) + '</td></tr>' +
-            '</table>'
+        let value = '<h4>' + this.title + '</h4>' +
+            '<table class="gantt-tooltip-table">';
+        if (this.dueDate) {
+            value += '<tr><td class="text-right">Due Date:</td><td>' + formatDate(this.dueDate) + '</td></tr>' +
+                '</table>'
+        } else {
+            value += '<tr><td class="text-right">Start:</td><td>' + formatDate(this.start) + '</td></tr>' +
+                '<tr><td class="text-right">End:</td><td>' + formatDate(this.end) + '</td></tr>' +
+                '</table>'
+        }
+        return value;
     }
 
     items.push({
@@ -19,7 +39,8 @@ function sampleDataSet() {
         class: 'info',
         sublane: 0,
         title: 'Milestone 1',
-        tooltip: getTooltip
+        tooltip: getTooltip,
+        dueDate: new Date('2022-06-02')
     });
 
     items.push({
@@ -30,7 +51,8 @@ function sampleDataSet() {
         class: 'info',
         sublane: 0,
         title: 'Milestone 2',
-        tooltip: getTooltip
+        tooltip: getTooltip,
+        dueDate: new Date('2022-06-15')
     });
 
     items.push({
@@ -41,7 +63,8 @@ function sampleDataSet() {
         class: 'info',
         sublane: 0,
         title: 'Milestone 3',
-        tooltip: getTooltip
+        tooltip: getTooltip,
+        dueDate: new Date('2022-06-20')
     });
 
     items.push({
@@ -52,7 +75,8 @@ function sampleDataSet() {
         class: 'info',
         sublane: 0,
         title: 'Milestone 4',
-        tooltip: getTooltip
+        tooltip: getTooltip,
+        dueDate: new Date('2022-01-01')
     });
 
     items.push({
@@ -63,7 +87,8 @@ function sampleDataSet() {
         class: 'info',
         sublane: 0,
         title: 'Milestone 5',
-        tooltip: getTooltip
+        tooltip: getTooltip,
+        dueDate: new Date('2023-01-01')
     });
 
     items.push({
@@ -76,6 +101,16 @@ function sampleDataSet() {
         title: 'Deliverable 1',
         tooltip: getTooltip
     });
+    // items.push({
+    //     id: 0,
+    //     lane: 1,
+    //     start: new Date('2022-06-05'),
+    //     end: new Date('2022-06-10'),
+    //     class: 'default',
+    //     sublane: 0,
+    //     title: 'Deliverable 1 (Baseline)',
+    //     tooltip: getTooltip
+    // });
 
     items.push({
         id: 0,
