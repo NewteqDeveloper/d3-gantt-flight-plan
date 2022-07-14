@@ -1,5 +1,5 @@
 setTimeout(() => {
-    var xAxis,
+    let xAxis,
         localeFormatter,
         tickFormat;
 
@@ -8,10 +8,6 @@ setTimeout(() => {
     });
 
     xAxis = gantt.xAxis();
-
-    setTimeout(() => {
-
-    }, 1000)
 
     localeFormatter = d3.locale({
         "decimal": ",",
@@ -51,47 +47,6 @@ setTimeout(() => {
     ]);
 
     xAxis.tickFormat(tickFormat);
-
-    function getRandomInt(min, max) {
-        return Math.floor(Math.random() * (max - min)) + min;
-    }
-
-    function getTooltip() {
-        const value = '<h4>Item #' + this.id + '</h4>' +
-            '<table class="gantt-tooltip-table">' +
-            '  <tr><td class="text-right">Start:</td><td>' + new Date(this.start) + '</td></tr>' +
-            '  <tr><td class="text-right">End:</td><td>' + new Date(this.end) + '</td></tr>' +
-            '  <tr><td class="text-right">Class:</td><td>' + this.class + '</td></tr>' +
-            '</table>';
-        return value
-    }
-
-    function getRandomItems(n) {
-        var items = [],
-            i,
-            N = n || 1,
-            rnd;
-        var startDate = Date.parse('2012-01-01T00:30:00'),
-            classes = ['success', 'danger', 'warning', 'info', 'default'],
-            id = 0;
-
-        for (i = 0; i < N; i++) {
-            rnd = getRandomInt(444000, 10444000);
-            items.push({
-                id: id++,
-                lane: getRandomInt(0, 5),
-                start: startDate + 180000,
-                end: startDate + rnd,
-                tooltip: getTooltip,
-                class: classes[getRandomInt(0, classes.length)],
-                sublane: getRandomInt(0, 4),
-                title: 'Long text to test things - Test Text ' + i
-            });
-            startDate += 1800000 + rnd;
-        }
-
-        return items;
-    }
 
     gantt.enableDrag(false);
     gantt.showXGrid(false);
