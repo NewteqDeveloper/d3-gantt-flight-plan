@@ -30,6 +30,28 @@ function sampleDataSet() {
         return value;
     }
 
+    milestones.forEach((item) => {
+        let dueDate = new Date(item.plannedDate);
+        let start = new Date(item.plannedDate);
+        let end = new Date(item.plannedDate);
+        let itemForChart = {
+            id: 'milestone_' + item.milestoneId,
+            lane: 0,
+            start: start,
+            end: end,
+            class: 'info',
+            title: item.name,
+            tooltip: getTooltip,
+            dueDate: dueDate
+        };
+        itemForChart.start.setDate(dueDate.getDate() - 1);
+        itemForChart.end.setDate(dueDate.getDate() + 1);
+
+        items.push(itemForChart);
+    });
+
+    return items;
+
     items.push({
         id: 0,
         lane: 0,
