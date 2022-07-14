@@ -51,4 +51,4 @@ setTimeout(() => {
     gantt.enableDrag(false);
     gantt.showXGrid(false);
     gantt.addItems(sampleDataSet());
-}, 1000);
+}, 0);
