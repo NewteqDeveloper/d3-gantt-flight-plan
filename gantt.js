@@ -500,7 +500,7 @@ var ganttChart = function (conf) {
                     // if (currentText[0][0].innerHTML == "Deliverable 1") {
                     //     console.log(currentText[0][0].innerHTML, rectStart, rectEnd, nodeBb.width, centerStart, getMarginWidth());
                     // }
-                    if ((centerStart + nodeBb.width) + 8 >= rectEnd) {
+                    if (centerStart< 0 || (centerStart + currentNode.getBBox().width) + 8 >= rectEnd) {
                         currentText.attr('style', "font-family: Material Icons;");
                         currentText.text('flag');
                         //currentText.html('<span class="material-icons">outlined_flag</span>');
@@ -513,10 +513,10 @@ var ganttChart = function (conf) {
                     } else if(rectStart < 0) {
                         centerStart = (rectEnd / 2) - (currentNode.getBBox().width / 2);
                     }
-                    if (rectStart + nodeBb.width + 8 > getMarginWidth()){
+                    if (rectStart + currentNode.getBBox().width + 8 > getMarginWidth()){
                         centerStart = rectStart + 8;
-                    } else if (rectEnd - nodeBb.width - 8 < 0) {
-                        centerStart = rectEnd - nodeBb.width - 8;
+                    } else if (rectEnd - currentNode.getBBox().width - 8 < 0) {
+                        centerStart = rectEnd - currentNode.getBBox().width - 8;
                     }
 
                     if (rectStart < 0 && rectEnd > getMarginWidth()){
