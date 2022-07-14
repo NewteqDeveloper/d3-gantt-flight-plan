@@ -50,6 +50,53 @@ function sampleDataSet() {
         items.push(itemForChart);
     });
 
+    const deliverableClasses = ['success', 'danger', 'warning'];
+    const deliverableItems = [];
+
+    for(let i = 0; i < deliverables.length; i++) {
+        const currentDeliverable = deliverables[i];
+        let itemForChart = {
+            id: 'deliverable_' + currentDeliverable.deliverableId,
+            lane: 1,
+            start: new Date(currentDeliverable.startDate),
+            end: new Date(currentDeliverable.endDate),
+            class: deliverableClasses[i % 3],
+            title: currentDeliverable.name,
+            tooltip: getTooltip
+        };
+
+        deliverableItems.push(itemForChart);
+    }
+
+    const overlappingItems = [];
+    deliverableItems.forEach((currentItem) => {
+        for (let i = 0; i < deliverableItems.length; i++){
+            let otherItem = deliverableItems[i];
+            if (currentItem.id !== otherItem.id) {
+                if (currentItem.start <= otherItem.end && currentItem.end >= otherItem.start){
+                    overlappingItems.push(currentItem);
+                    overlappingItems.push(otherItem);
+                }
+            }
+        }
+    });
+    const single = [...new Map(overlappingItems.map(item =>
+        [item.id, item])).values()];
+
+    for(let i = 0; i < single.length; i++) {
+        let item = single[i];
+        item.lane = (item.lane + i) % 5;
+    }
+
+    deliverableItems.forEach((item) => {
+        const findMe = single.find((item1) => item1.id === item.id);
+        if (!findMe) {
+            items.push(item);
+        } else {
+            items.push(findMe);
+        }
+    })
+
     return items;
 
     items.push({
