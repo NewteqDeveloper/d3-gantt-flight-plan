@@ -433,7 +433,7 @@ var ganttChart = function (conf) {
         text.exit().remove();
 
         d3.selectAll(".custom-text")
-            .each(function () {
+            .each(function (n, f) {
                 var currentNode = this;
                 var currentText = d3.select(currentNode);
                 var nodeBb = currentNode.getBBox();//currentText.node().getBBox();
@@ -493,15 +493,20 @@ var ganttChart = function (conf) {
                     //     ellipsis.remove();
                     // }
                     //currentText.html("New Text");
-                    var centerStart = rectStart + ((rectEnd - rectStart) / 2) - (currentNode.getBBox().width / 2);
-                    if (currentText[0][0].innerHTML == "Deliverable 1") {
-                        console.log(currentText[0][0].innerHTML, rectStart, rectEnd, nodeBb.width, centerStart, getMarginWidth());
+                    if (f == 0){
+                        console.log('Before: ', currentText[0][0].innerHTML);
                     }
+                    var centerStart = rectStart + ((rectEnd - rectStart) / 2) - (currentNode.getBBox().width / 2);
+                    // if (currentText[0][0].innerHTML == "Deliverable 1") {
+                    //     console.log(currentText[0][0].innerHTML, rectStart, rectEnd, nodeBb.width, centerStart, getMarginWidth());
+                    // }
                     if ((centerStart + nodeBb.width) + 8 >= rectEnd) {
                         currentText.attr('style', "font-family: Material Icons;");
                         currentText.text('flag');
                         //currentText.html('<span class="material-icons">outlined_flag</span>');
                         centerStart = rectStart + ((rectEnd - rectStart) / 2) - (currentNode.getBBox().width / 2);
+                    } else {
+                        currentText.attr('style', null);
                     }
                     if (rectEnd >= getMarginWidth()){
                         centerStart = rectStart + ((getMarginWidth() - rectStart) / 2) - (currentNode.getBBox().width / 2);
@@ -520,6 +525,9 @@ var ganttChart = function (conf) {
                     // if (nodeBb.width <= rectEnd - rectStart + 8) {
                     //     centerStart = rectStart + 8;
                     // }
+                    if (f == 0) {
+                        console.log('After: ', currentText[0][0].innerHTML);
+                    }
                     return centerStart;
                 })
                     .attr("y", function (d) {
