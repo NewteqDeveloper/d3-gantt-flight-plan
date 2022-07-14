@@ -43,6 +43,8 @@ function sampleDataSet() {
         dueDate: new Date('2022-06-02')
     });
 
+    return items;
+
     items.push({
         id: 0,
         lane: 0,

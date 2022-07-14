@@ -94,4 +94,5 @@ setTimeout(() => {
     gantt.enableDrag(false);
     gantt.showXGrid(false);
     gantt.addItems(sampleDataSet());
+    gantt.adjustZoom(gantt.availableScales.THREE);
 }, 1000);

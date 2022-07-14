@@ -8,6 +8,12 @@ var ganttChart = function (conf) {
         ostr = "[object Object]",
         chart, drag, main, itemRects, tooltipDiv, xAxis, xScale, yAxis, yScale, zoom, textGroup,
         resizeRectMargin = 50;
+    const timeScaleMonths = {
+        THREE: 3,
+        SIX: 6,
+        NINE: 9,
+        TWELVE: 12
+    }
 
     api = {
         addItems: addItems,
@@ -53,6 +59,8 @@ var ganttChart = function (conf) {
         zoom: function () {
             return zoom
         },
+        adjustZoom: adjustZoom,
+        availableScales: timeScaleMonths
     };
 
     self.items = null;
@@ -77,6 +85,7 @@ var ganttChart = function (conf) {
         bottom: 20,
         left: 20
     };
+    self.initialZoomLevel = null;
 
     (function init() {
         copySameProp(self, conf);
@@ -98,6 +107,13 @@ var ganttChart = function (conf) {
         showYGrid(self.isShowYGrid);
         redraw();
     })();
+
+    function adjustZoom(scaleMonths) {
+        xScale.domain(getTimeDomainLevel(scaleMonths));
+        zoom.x(xScale);
+        redraw();
+        redraw();
+    }
 
     function addItems(newItems) {
         var itemsType = toStr.call(newItems);
@@ -173,7 +189,7 @@ var ganttChart = function (conf) {
             .tickFormat("");
 
         zoom = d3.behavior.zoom()
-            .scaleExtent([0.0188679, 1])
+            //.scaleExtent([0.0188679, 1])
             .x(xScale);
 
         main.append('g')
@@ -317,16 +333,73 @@ var ganttChart = function (conf) {
     }
 
     function getTimeDomain() {
+        if (self.initialZoomLevel) {
+            return getTimeDomainLevel(self.initialZoomLevel);
+        }
+
+        const today = new Date();
+        const start = new Date(today.getFullYear(), today.getMonth(), 1);
+        const end = new Date(today.getFullYear(), today.getMonth() + 1, 1);
+
+        if (zoom) {
+            zoom.scaleExtent(getScaleExtentBetweenDays(start, end));
+        }
         return [
             d3.min(self.items, function (d) {
-                return new Date('2022-06-01');
+                return start;
+                // return new Date('2022-06-01');
                 // return d.start
             }),
             d3.max(self.items, function (d) {
-                return new Date('2022-06-07');
+                return end;
+                // return new Date('2022-06-07');
                 // return d.end
             })
         ];
+    }
+
+    function getScaleExtentBetweenDays(start, end) {
+        const timeBetween = end.getTime() - start.getTime(); // gets time in ms between dates
+        const daysBetween = timeBetween / (1000 * 60 * 60 * 24); // convert to time in days
+
+        return [Math.abs(daysBetween/365.2425), Math.abs(daysBetween/7)];
+    }
+
+    function getTimeDomainLevel(scaleMonths) {
+        const today = new Date();
+        let start, end;
+        switch (scaleMonths) {
+            case timeScaleMonths.SIX:
+                start = new Date(today.getFullYear(), today.getMonth() - 2, 1);
+                end = new Date(today.getFullYear(), today.getMonth() + 3, 1);
+                break;
+            case timeScaleMonths.NINE:
+                start = new Date(today.getFullYear(), today.getMonth() - 4, 1);
+                end = new Date(today.getFullYear(), today.getMonth() + 4, 1);
+                break;
+            case timeScaleMonths.TWELVE:
+                start = new Date(today.getFullYear(), today.getMonth() - 5, 1);
+                end = new Date(today.getFullYear(), today.getMonth() + 6, 1);
+                break;
+            case timeScaleMonths.THREE:
+            default:
+                start = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+                end = new Date(today.getFullYear(), today.getMonth() + 1, 1);
+                break;
+        }
+
+        if (zoom) {
+            zoom.scaleExtent(getScaleExtentBetweenDays(start, end));
+        }
+
+        return [
+            d3.min(self.items, function () {
+                return start;
+            }),
+            d3.max(self.items, function () {
+                return end;
+            })
+        ]
     }
 
     function hideTooltip() {
@@ -493,14 +566,11 @@ var ganttChart = function (conf) {
                     //     ellipsis.remove();
                     // }
                     //currentText.html("New Text");
-                    if (f == 0){
-                        console.log('Before: ', currentText[0][0].innerHTML);
-                    }
                     var centerStart = rectStart + ((rectEnd - rectStart) / 2) - (currentNode.getBBox().width / 2);
                     // if (currentText[0][0].innerHTML == "Deliverable 1") {
                     //     console.log(currentText[0][0].innerHTML, rectStart, rectEnd, nodeBb.width, centerStart, getMarginWidth());
                     // }
-                    if (centerStart< 0 || (centerStart + currentNode.getBBox().width) + 8 >= rectEnd) {
+                    if (centerStart < 0 || (centerStart + currentNode.getBBox().width) + 8 >= rectEnd) {
                         currentText.attr('style', "font-family: Material Icons;");
                         currentText.text('flag');
                         //currentText.html('<span class="material-icons">outlined_flag</span>');
@@ -525,9 +595,6 @@ var ganttChart = function (conf) {
                     // if (nodeBb.width <= rectEnd - rectStart + 8) {
                     //     centerStart = rectStart + 8;
                     // }
-                    if (f == 0) {
-                        console.log('After: ', currentText[0][0].innerHTML);
-                    }
                     return centerStart;
                 })
                     .attr("y", function (d) {
