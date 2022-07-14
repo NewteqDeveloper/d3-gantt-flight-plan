@@ -1,5 +1,12 @@
 'use strict';
 
+const timeScaleMonthsEnum = {
+    THREE: 3,
+    SIX: 6,
+    NINE: 9,
+    TWELVE: 12
+}
+
 var ganttChart = function (conf) {
     var api,
         self = {},
@@ -8,12 +15,6 @@ var ganttChart = function (conf) {
         ostr = "[object Object]",
         chart, drag, main, itemRects, tooltipDiv, xAxis, xScale, yAxis, yScale, zoom, textGroup,
         resizeRectMargin = 50;
-    const timeScaleMonths = {
-        THREE: 3,
-        SIX: 6,
-        NINE: 9,
-        TWELVE: 12
-    }
 
     api = {
         addItems: addItems,
@@ -60,7 +61,7 @@ var ganttChart = function (conf) {
             return zoom
         },
         adjustZoom: adjustZoom,
-        availableScales: timeScaleMonths
+        availableScales: timeScaleMonthsEnum
     };
 
     self.items = null;
@@ -369,19 +370,19 @@ var ganttChart = function (conf) {
         const today = new Date();
         let start, end;
         switch (scaleMonths) {
-            case timeScaleMonths.SIX:
+            case timeScaleMonthsEnum.SIX:
                 start = new Date(today.getFullYear(), today.getMonth() - 2, 1);
                 end = new Date(today.getFullYear(), today.getMonth() + 3, 1);
                 break;
-            case timeScaleMonths.NINE:
+            case timeScaleMonthsEnum.NINE:
                 start = new Date(today.getFullYear(), today.getMonth() - 4, 1);
                 end = new Date(today.getFullYear(), today.getMonth() + 4, 1);
                 break;
-            case timeScaleMonths.TWELVE:
+            case timeScaleMonthsEnum.TWELVE:
                 start = new Date(today.getFullYear(), today.getMonth() - 5, 1);
                 end = new Date(today.getFullYear(), today.getMonth() + 6, 1);
                 break;
-            case timeScaleMonths.THREE:
+            case timeScaleMonthsEnum.THREE:
             default:
                 start = new Date(today.getFullYear(), today.getMonth() - 1, 1);
                 end = new Date(today.getFullYear(), today.getMonth() + 1, 1);

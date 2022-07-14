@@ -1,7 +1,6 @@
 function sampleDataSet() {
     var items = [];
-    var startDate = Date.parse('2022-06-01T00:30:00'),
-        classes = ['success', 'danger', 'warning', 'info', 'default'];
+    var classes = ['success', 'danger', 'warning', 'info', 'default'];
 
     function formatDate(date) {
         let d = new Date(date);
@@ -42,8 +41,6 @@ function sampleDataSet() {
         tooltip: getTooltip,
         dueDate: new Date('2022-06-02')
     });
-
-    return items;
 
     items.push({
         id: 0,
