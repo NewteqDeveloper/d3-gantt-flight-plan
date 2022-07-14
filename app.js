@@ -15,7 +15,7 @@ setTimeout(() => {
         "decimal": ",",
         "thousands": ".",
         "grouping": [3],
-        "currency": ["€", ""],
+        "currency": ["R", ""],
         "dateTime": "%a %b %d %Y",
         "date": "%Y-%m-%d",
         "time": "%H:%M:%S",
