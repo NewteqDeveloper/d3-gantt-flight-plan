@@ -190,7 +190,6 @@ var ganttChart = function (conf) {
             .tickFormat("");
 
         zoom = d3.behavior.zoom()
-            //.scaleExtent([0.0188679, 1])
             .x(xScale);
 
         main.append('g')
@@ -346,15 +345,11 @@ var ganttChart = function (conf) {
             zoom.scaleExtent(getScaleExtentBetweenDays(start, end));
         }
         return [
-            d3.min(self.items, function (d) {
+            d3.min(self.items, function () {
                 return start;
-                // return new Date('2022-06-01');
-                // return d.start
             }),
-            d3.max(self.items, function (d) {
+            d3.max(self.items, function () {
                 return end;
-                // return new Date('2022-06-07');
-                // return d.end
             })
         ];
     }
@@ -363,7 +358,7 @@ var ganttChart = function (conf) {
         const timeBetween = end.getTime() - start.getTime(); // gets time in ms between dates
         const daysBetween = timeBetween / (1000 * 60 * 60 * 24); // convert to time in days
 
-        return [Math.abs(daysBetween/365.2425), Math.abs(daysBetween/7)];
+        return [Math.abs(daysBetween / 365.2425), Math.abs(daysBetween / 7)];
     }
 
     function getTimeDomainLevel(scaleMonths) {
@@ -511,152 +506,52 @@ var ganttChart = function (conf) {
                 var currentNode = this;
                 var currentText = d3.select(currentNode);
                 var nodeBb = currentNode.getBBox();//currentText.node().getBBox();
-                currentText.attr("x", function (d) {
-                    var rectStart = xScale(d.start);
-                    var rectEnd = xScale(d.end);
-                        // debugger;
-                        // var words = currentText.text().split(/\s+/);
-                        // var numberWords = words.length;
-                        // var count = 0;
-                        // currentText.text('');
-                        // while (currentNode.getBBox().width < (rectEnd - rectStart) && count < numberWords - 1) {
-                        //     // if (count === 0) {
-                        //     //     currentText.text(words.shift());
-                        //     // } else if(count === numberWords - 1) {
-                        //     //     currentText.text(currentText.text() + ' ' + words.shift());
-                        //     // }
-                        //     currentText.text(currentText.text() + ' ' + words.shift());
-                        //     count++;
+                currentText
+                    .attr("x", function (d) {
+                        var rectStart = xScale(d.start);
+                        var rectEnd = xScale(d.end);
+                        var centerStart = rectStart + ((rectEnd - rectStart) / 2) - (currentNode.getBBox().width / 2);
+                        // if (currentText[0][0].innerHTML == "Deliverable 1") {
+                        //     console.log(currentText[0][0].innerHTML, rectStart, rectEnd, nodeBb.width, centerStart, getMarginWidth());
                         // }
-                        // if (currentNode.getBBox().width > (rectEnd - rectStart)){
-                        //     currentText.text('...');
+                        if (centerStart < 0 || (centerStart + currentNode.getBBox().width) + 8 >= rectEnd) {
+                            currentText.attr('style', "font-family: Material Icons;");
+                            currentText.text('flag');
+                            centerStart = rectStart + ((rectEnd - rectStart) / 2) - (currentNode.getBBox().width / 2);
+                        } else {
+                            currentText.attr('style', null);
+                        }
+                        if (rectEnd >= getMarginWidth()) {
+                            centerStart = rectStart + ((getMarginWidth() - rectStart) / 2) - (currentNode.getBBox().width / 2);
+                        } else if (rectStart < 0) {
+                            centerStart = (rectEnd / 2) - (currentNode.getBBox().width / 2);
+                        }
+                        if (rectStart + currentNode.getBBox().width + 8 > getMarginWidth()) {
+                            centerStart = rectStart + 8;
+                        } else if (rectEnd - currentNode.getBBox().width - 8 < 0) {
+                            centerStart = rectEnd - currentNode.getBBox().width - 8;
+                        }
+
+                        if (rectStart < 0 && rectEnd > getMarginWidth()) {
+                            centerStart = (getMarginWidth() / 2) - (currentNode.getBBox().width / 2);
+                        }
+                        // if (nodeBb.width <= rectEnd - rectStart + 8) {
+                        //     centerStart = rectStart + 8;
                         // }
-                    // if (currentNode.getBBox().width > (rectEnd - rectStart)){
-                    //     currentText.text('...');
-                    // } else {
-                    //     while (currentNode.getBBox().width < (rectEnd - rectStart) && count < numberWords - 1) {
-                    //         // if (count === 0) {
-                    //         //     currentText.text(words.shift());
-                    //         // } else if(count === numberWords - 1) {
-                    //         //     currentText.text(currentText.text() + ' ' + words.shift());
-                    //         // }
-                    //         currentText.text(currentText.text() + ' ' + words.shift());
-                    //         count++;
-                    //     }
-                    // }
-
-                    // var words = currentText.text().split(/\s+/);
-                    //
-                    // var ellipsis = currentText.text('').append('tspan').attr('class', 'elip').text('...');
-                    // var width = rectStart + rectEnd;
-                    // var numWords = words.length;
-                    //
-                    // var tspan = text.insert('tspan', ':first-child').text(words.join(' '));
-                    //
-                    // // Try the whole line
-                    // // While it's too long, and we have words left, keep removing words
-                    //
-                    // var count = 0;
-                    // while (tspan.node().getComputedTextLength() > width && words.length && count < 5) {
-                    //     count++;
-                    //     words.pop();
-                    //     tspan.text(words.join(' '));
-                    // }
-                    //
-                    // if (words.length === numWords) {
-                    //     ellipsis.remove();
-                    // }
-                    //currentText.html("New Text");
-                    var centerStart = rectStart + ((rectEnd - rectStart) / 2) - (currentNode.getBBox().width / 2);
-                    // if (currentText[0][0].innerHTML == "Deliverable 1") {
-                    //     console.log(currentText[0][0].innerHTML, rectStart, rectEnd, nodeBb.width, centerStart, getMarginWidth());
-                    // }
-                    if (centerStart < 0 || (centerStart + currentNode.getBBox().width) + 8 >= rectEnd) {
-                        currentText.attr('style', "font-family: Material Icons;");
-                        currentText.text('flag');
-                        //currentText.html('<span class="material-icons">outlined_flag</span>');
-                        centerStart = rectStart + ((rectEnd - rectStart) / 2) - (currentNode.getBBox().width / 2);
-                    } else {
-                        currentText.attr('style', null);
-                    }
-                    if (rectEnd >= getMarginWidth()){
-                        centerStart = rectStart + ((getMarginWidth() - rectStart) / 2) - (currentNode.getBBox().width / 2);
-                    } else if(rectStart < 0) {
-                        centerStart = (rectEnd / 2) - (currentNode.getBBox().width / 2);
-                    }
-                    if (rectStart + currentNode.getBBox().width + 8 > getMarginWidth()){
-                        centerStart = rectStart + 8;
-                    } else if (rectEnd - currentNode.getBBox().width - 8 < 0) {
-                        centerStart = rectEnd - currentNode.getBBox().width - 8;
-                    }
-
-                    if (rectStart < 0 && rectEnd > getMarginWidth()){
-                        centerStart = (getMarginWidth() / 2) - (currentNode.getBBox().width / 2);
-                    }
-                    // if (nodeBb.width <= rectEnd - rectStart + 8) {
-                    //     centerStart = rectStart + 8;
-                    // }
-                    return centerStart;
-                })
+                        return centerStart;
+                    })
                     .attr("y", function (d) {
                         var rectY = (self.sublanes < 2) ? yScale(d.lane) : yScale(d.lane) + d.sublane * itemHeight;
                         var centerText = itemHeight / 2;
                         return rectY + centerText;
                     })
-                    //.call(dotme);
-                //dotme(currentText, start);
             })
-
-        // setTimeout(() => {
-        //     d3.selectAll(".custom-text")
-        //         .each(function () {
-        //             var currentText = d3.select(this);
-        //             var nodeBb = currentText.node().getBBox();
-        //             currentText.attr("x", function (d) {
-        //                 var rectStart = xScale(d.start);
-        //                 var rectEnd = xScale(d.end);
-        //                 currentText.html("New Text");
-        //                 var centerStart = rectStart + ((rectEnd - rectStart) / 2) - (nodeBb.width / 2)
-        //                 return centerStart;
-        //             })
-        //             .attr("y", function (d) {
-        //                 var rectY = (self.sublanes < 2) ? yScale(d.lane) : yScale(d.lane) + d.sublane * itemHeight;
-        //                 var centerText = itemHeight / 2;
-        //                 return rectY + centerText;
-        //             })
-        //             //.call(dotme);
-        //         })
-        // }, 100);
 
         main.select('g.main.axis.date').call(xAxis);
         main.select('g.main.axis.lane').call(yAxis);
 
         hideTooltip();
     }
-
-    // function dotme(text) {
-    //     debugger;
-    //     var textData = text.data()[0];
-    //     var words = text.text().split(/\s+/);
-    //
-    //     var ellipsis = text.text('').append('tspan').attr('class', 'elip').text('...');
-    //     var width = xScale(textData.start) + xScale(textData.end);
-    //     var numWords = words.length;
-    //
-    //     var tspan = text.insert('tspan', ':first-child').text(words.join(' '));
-    //
-    //     // Try the whole line
-    //     // While it's too long, and we have words left, keep removing words
-    //
-    //     while (tspan.node().getComputedTextLength() > width && words.length) {
-    //         words.pop();
-    //         tspan.text(words.join(' '));
-    //     }
-    //
-    //     if (words.length === numWords) {
-    //         ellipsis.remove();
-    //     }
-    // }
 
     function resize() {
         if (self.isAutoResize) {
