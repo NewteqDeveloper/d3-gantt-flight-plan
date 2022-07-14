@@ -119,7 +119,7 @@ function sampleDataSet() {
         lane: 3,
         start: new Date('2022-06-12'),
         end: new Date('2022-06-16'),
-        class: 'warning',
+        class: 'danger',
         title: 'Deliverable 3',
         tooltip: getTooltip
     });
