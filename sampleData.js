@@ -117,44 +117,4 @@ function sampleDataSet() {
     items = items.concat(deliverableItems);
 
     return items;
-
-    const lanesUsed = [...new Set(deliverableItems.map(item => item.lane))];
-    lanesUsed.forEach((lane) => {
-        const itemsInLane = deliverableItems.filter((item) => item.lane === lane);
-        for (let i = 0; i + 1 < itemsInLane.length; i++) {
-
-        }
-    });
-
-    const overlappingItems = [];
-    deliverableItems.forEach((currentItem) => {
-        for (let i = 0; i < deliverableItems.length; i++){
-            let otherItem = deliverableItems[i];
-            if (currentItem.id !== otherItem.id) {
-                if (currentItem.start <= otherItem.end && currentItem.end >= otherItem.start){
-                    overlappingItems.push(currentItem);
-                    overlappingItems.push(otherItem);
-                }
-            }
-        }
-    });
-    const single = [...new Map(overlappingItems.map(item =>
-        [item.id, item])).values()];
-
-    for(let i = 0; i < single.length; i++) {
-        let item = single[i];
-        //item.lane = ((item.lane + i) % 4) + 1;
-        item.lane = (item.lane + i) % 5;
-    }
-
-    deliverableItems.forEach((item) => {
-        const findMe = single.find((item1) => item1.id === item.id);
-        if (!findMe) {
-            items.push(item);
-        } else {
-            items.push(findMe);
-        }
-    })
-
-    return items;
 }
