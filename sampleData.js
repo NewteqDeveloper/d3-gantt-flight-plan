@@ -53,11 +53,29 @@ function sampleDataSet() {
     const deliverableClasses = ['success', 'danger', 'warning'];
     const deliverableItems = [];
 
-    for(let i = 0; i < deliverables.length; i++) {
-        const currentDeliverable = deliverables[i];
+    let sortedDeliverables = deliverables.sort((a, b) => {
+        let aDate = new Date(a.startDate);
+        let bDate = new Date(b.startDate);
+        if (aDate > bDate) {
+            return 1;
+        } else if (aDate < bDate) {
+            return -1;
+        } else {
+            if (a.name > b.name) {
+                return 1;
+            } else if (a.name < b.name) {
+                return -1;
+            } else {
+                return 0;
+            }
+        }
+    });
+
+    for(let i = 0; i < sortedDeliverables.length; i++) {
+        const currentDeliverable = sortedDeliverables[i];
         let itemForChart = {
             id: 'deliverable_' + currentDeliverable.deliverableId,
-            lane: 1,
+            lane: (i % 4) + 1,
             start: new Date(currentDeliverable.startDate),
             end: new Date(currentDeliverable.endDate),
             class: deliverableClasses[i % 3],
@@ -65,8 +83,32 @@ function sampleDataSet() {
             tooltip: getTooltip
         };
 
+        if (i > 0) {
+            for (let j = 0; j < deliverableItems.length; j++) {
+                const previous = deliverableItems[j];
+                if (itemForChart.start <= previous.end && itemForChart.end >= previous.start) {
+                    if (itemForChart.lane === previous.lane) {
+                        itemForChart.lane = ((itemForChart.lane + 1) % 4) + 1;
+                        break;
+                    }
+                }
+            }
+        }
+
         deliverableItems.push(itemForChart);
     }
+
+    items = items.concat(deliverableItems);
+
+    return items;
+
+    const lanesUsed = [...new Set(deliverableItems.map(item => item.lane))];
+    lanesUsed.forEach((lane) => {
+        const itemsInLane = deliverableItems.filter((item) => item.lane === lane);
+        for (let i = 0; i + 1 < itemsInLane.length; i++) {
+
+        }
+    });
 
     const overlappingItems = [];
     deliverableItems.forEach((currentItem) => {
@@ -85,6 +127,7 @@ function sampleDataSet() {
 
     for(let i = 0; i < single.length; i++) {
         let item = single[i];
+        //item.lane = ((item.lane + i) % 4) + 1;
         item.lane = (item.lane + i) % 5;
     }
 
