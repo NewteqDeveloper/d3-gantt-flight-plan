@@ -7,6 +7,11 @@ const timeScaleMonthsEnum = {
     TWELVE: 12
 }
 
+const blockTypesEnum = {
+    MILESTONE: 'milestone',
+    DELIVERABLE: 'deliverable'
+}
+
 var ganttChart = function (conf) {
     var api,
         self = {},
@@ -516,7 +521,15 @@ var ganttChart = function (conf) {
                         // }
                         if (centerStart < 0 || (centerStart + currentNode.getBBox().width) + 8 >= rectEnd) {
                             currentText.attr('style', "font-family: Material Icons;");
-                            currentText.text('flag');
+                            switch (d.type) {
+                                case blockTypesEnum.DELIVERABLE:
+                                    currentText.text('local_shipping');
+                                    break;
+                                case blockTypesEnum.MILESTONE:
+                                default:
+                                    currentText.text('flag');
+                                    break;
+                            }
                             centerStart = rectStart + ((rectEnd - rectStart) / 2) - (currentNode.getBBox().width / 2);
                         } else {
                             currentText.attr('style', null);

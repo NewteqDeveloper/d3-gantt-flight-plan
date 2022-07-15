@@ -46,7 +46,9 @@ function sampleDataSet() {
               debugger;
                 console.log('clicked', this.id);
             },
-            dueDate: dueDate
+            dueDate: dueDate,
+            type: blockTypesEnum.MILESTONE,
+            milestoneId: item.milestoneId
         };
         itemForChart.start.setDate(dueDate.getDate() - 1);
         itemForChart.end.setDate(dueDate.getDate() + 1);
@@ -91,6 +93,8 @@ function sampleDataSet() {
             title: currentDeliverable.name,
             tooltip: getTooltip,
             onClick: clicky,
+            type: blockTypesEnum.DELIVERABLE,
+            deliverableId: currentDeliverable.deliverableId
         };
 
         if (i > 0) {
