@@ -42,6 +42,10 @@ function sampleDataSet() {
             class: 'info',
             title: item.name,
             tooltip: getTooltip,
+            onClick: () => {
+              debugger;
+                console.log('clicked', this.id);
+            },
             dueDate: dueDate
         };
         itemForChart.start.setDate(dueDate.getDate() - 1);
@@ -71,6 +75,11 @@ function sampleDataSet() {
         }
     });
 
+    function clicky() {
+        debugger;
+        console.log('clicked', this.id);
+    }
+
     for(let i = 0; i < sortedDeliverables.length; i++) {
         const currentDeliverable = sortedDeliverables[i];
         let itemForChart = {
@@ -80,7 +89,8 @@ function sampleDataSet() {
             end: new Date(currentDeliverable.endDate),
             class: deliverableClasses[i % 3],
             title: currentDeliverable.name,
-            tooltip: getTooltip
+            tooltip: getTooltip,
+            onClick: clicky,
         };
 
         if (i > 0) {
