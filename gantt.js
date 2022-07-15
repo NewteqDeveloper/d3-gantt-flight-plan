@@ -502,7 +502,7 @@ var ganttChart = function (conf) {
         text.exit().remove();
 
         d3.selectAll(".custom-text")
-            .each(function (n, f) {
+            .each(function () {
                 var currentNode = this;
                 var currentText = d3.select(currentNode);
                 var nodeBb = currentNode.getBBox();//currentText.node().getBBox();
