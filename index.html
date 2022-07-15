@@ -8,9 +8,29 @@
     <script src="actualData.js"></script>
     <script src="sampleData.js"></script>
     <script src="app.js"></script>
+    <style>
+        .buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            width: 8rem;
+            grid-column-gap: 8px;
+        }
+        .button-container {
+            display: grid;
+            justify-content: center;
+        }
+    </style>
 </head>
 <body>
 <h1>Hello</h1>
+<div class="button-container">
+    <div class="buttons">
+        <div>3</div>
+        <div>6</div>
+        <div>9</div>
+        <div>12</div>
+    </div>
+</div>
 <div id="gantt_chart"></div>
 </body>
 </html>
