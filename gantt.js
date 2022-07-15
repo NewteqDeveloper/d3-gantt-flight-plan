@@ -485,9 +485,9 @@ var ganttChart = function (conf) {
             })
             .attr("opacity", .75)
             .call(drag)
-            //.on("click", (self.isEnableTooltip) ? showTooltip : null)
             .on("mouseover", showTooltip)
             .on("mousemove", changeCursor)
+            .on("click", blockClick);
 
         rects.enter().append("rect");
         rects.exit().remove();
@@ -610,6 +610,12 @@ var ganttChart = function (conf) {
         }
 
         return api;
+    }
+
+    function blockClick(data) {
+        if (data.onClick) {
+            data.onClick();
+        }
     }
 
     function showTooltip(d) {
