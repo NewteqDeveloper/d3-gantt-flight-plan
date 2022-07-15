@@ -75,7 +75,7 @@ function sampleDataSet() {
         const currentDeliverable = sortedDeliverables[i];
         let itemForChart = {
             id: 'deliverable_' + currentDeliverable.deliverableId,
-            lane: (i % 3) + 1,
+            lane: (i % 4) + 1,
             start: new Date(currentDeliverable.startDate),
             end: new Date(currentDeliverable.endDate),
             class: deliverableClasses[i % 3],
@@ -91,7 +91,7 @@ function sampleDataSet() {
                         let overlap, counter = 1;
                         do {
                             overlap = false;
-                            itemForChart.lane = ((itemForChart.lane + 1) % 3) + 1;
+                            itemForChart.lane = ((itemForChart.lane + 1) % 4) + 1;
                             let itemsInThisLane = deliverableItems.filter(x => x.lane === itemForChart.lane);
                             for (let x = 0; x < itemsInThisLane.length; x++) {
                                 let itemLane = itemsInThisLane[x];
@@ -101,8 +101,8 @@ function sampleDataSet() {
                                     break;
                                 }
                             }
-                        } while(overlap && counter < 3);
-                        if (counter >= 3) {
+                        } while(overlap && counter < 4);
+                        if (counter >= 4) {
                             console.error('RAN OUT OF LANES');
                         }
                         break;
