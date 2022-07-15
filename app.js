@@ -4,7 +4,11 @@ setTimeout(() => {
         tickFormat;
 
     const gantt = ganttChart({
-        initialZoomLevel: timeScaleMonthsEnum.THREE
+        initialZoomLevel: timeScaleMonthsEnum.THREE,
+        typeIcons: {
+            [blockTypesEnum.MILESTONE]: 'flag',
+            [blockTypesEnum.DELIVERABLE]: 'local_shipping'
+        }
     });
 
     xAxis = gantt.xAxis();

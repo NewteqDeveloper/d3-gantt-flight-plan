@@ -91,7 +91,11 @@ var ganttChart = function (conf) {
         bottom: 20,
         left: 20
     };
+
     self.initialZoomLevel = null;
+    self.typeIcons = {
+        default: 'task_alt'
+    };
 
     (function init() {
         copySameProp(self, conf);
@@ -286,7 +290,9 @@ var ganttChart = function (conf) {
 
         for (p in copyFrom) {
             if (copyTo.hasOwnProperty(p)) {
-                if (toStr.call(copyFrom[p]) === ostr) {
+                if (p === 'typeIcons') {
+                    Object.assign(copyTo[p], copyFrom[p]);
+                } else if (toStr.call(copyFrom[p]) === ostr) {
                     copySameProp(copyTo[p], copyFrom[p]);
                 } else {
                     copyTo[p] = copyFrom[p];
@@ -521,14 +527,10 @@ var ganttChart = function (conf) {
                         // }
                         if (centerStart < 0 || (centerStart + currentNode.getBBox().width) + 8 >= rectEnd) {
                             currentText.attr('style', "font-family: Material Icons;");
-                            switch (d.type) {
-                                case blockTypesEnum.DELIVERABLE:
-                                    currentText.text('local_shipping');
-                                    break;
-                                case blockTypesEnum.MILESTONE:
-                                default:
-                                    currentText.text('flag');
-                                    break;
+                            if (self.typeIcons[d.type]) {
+                                currentText.text(self.typeIcons[d.type]);
+                            } else {
+                                currentText.text(self.typeIcons.default);
                             }
                             centerStart = rectStart + ((rectEnd - rectStart) / 2) - (currentNode.getBBox().width / 2);
                         } else {
